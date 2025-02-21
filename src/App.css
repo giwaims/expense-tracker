@@ -15,10 +15,11 @@ body {
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   max-width: 800px;
-  width: 100%;
-  padding: 30px;
+  width: 95%;
+  padding: 20px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 15px auto;
 }
 
 .App:hover {
@@ -30,13 +31,13 @@ body {
 header {
   background: linear-gradient(135deg, #28a745, #218838);
   color: white;
-  padding: 20px;
+  padding: 15px;
   border-radius: 15px 15px 0 0;
   margin-bottom: 20px;
 }
 
 header h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin: 0;
   transition: color 0.3s ease;
 }
@@ -46,15 +47,16 @@ header .balance-section {
 }
 
 header .balance-section h2 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin: 0;
 }
 
 header .balance-section p {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
   margin: 10px 0 0;
   transition: color 0.3s ease;
+  word-break: break-word;
 }
 
 /* Main Content */
@@ -66,13 +68,14 @@ main {
 
 .input-container {
   display: flex;
+  flex-direction: row;
   gap: 20px;
   justify-content: space-between;
 }
 
 .input-section {
   background: #f9f9f9;
-  padding: 20px;
+  padding: 15px;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   flex: 1;
@@ -85,7 +88,7 @@ main {
 }
 
 .input-section h2 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin-bottom: 8px;
   color: #555;
 }
@@ -111,7 +114,7 @@ input:focus {
 }
 
 button {
-  padding: 10px 20px;
+  padding: 10px 15px;
   background-color: #28a745;
   color: white;
   border: none;
@@ -170,6 +173,9 @@ button:hover {
   background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .transactions-section li:hover {
@@ -205,4 +211,153 @@ button:hover {
 .no-transactions {
   color: #888;
   font-style: italic;
+}
+
+/* Date Input */
+.input-group input[type="date"] {
+  flex: 1;
+  min-width: 140px;
+}
+
+.transactions-section li small {
+  font-size: 0.8em;
+  color: #666;
+  display: block;
+  margin-top: 4px;
+}
+
+/* Transaction Styles */
+.transaction-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-description {
+  color: #666;
+  font-size: 0.9em;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.transaction-details {
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+  animation: expand 0.3s ease;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.delete-btn {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
+.delete-btn:hover {
+  background: #ffcdd2;
+}
+
+@keyframes expand {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .App {
+    width: 90%;
+    padding: 15px;
+    margin: 10px auto;
+  }
+
+  header h1 {
+    font-size: 1.7rem;
+  }
+
+  header .balance-section h2 {
+    font-size: 1rem;
+  }
+
+  header .balance-section p {
+    font-size: 1.7rem;
+  }
+
+  .input-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .input-section {
+    padding: 12px;
+  }
+
+  .input-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-group button {
+    width: 100%;
+  }
+
+  .transaction-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .transaction-description {
+    max-width: 100%;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .App {
+    width: 95%;
+    padding: 10px;
+    border-radius: 15px;
+  }
+
+  header {
+    padding: 12px;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  .transactions-section {
+    padding: 12px;
+  }
+
+  .transactions-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .transactions-section li {
+    padding: 12px;
+  }
 }
