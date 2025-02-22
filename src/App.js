@@ -10,7 +10,7 @@ function App() {
   const [expenseDescription, setExpenseDescription] = useState("");
   const [expandedId, setExpandedId] = useState(null);
   // Debug state to verify localStorage
-  const [storageStatus, setStorageStatus] = useState("Checking...");
+  const [setStorageStatus] = useState("Checking...");
 
   // Check if localStorage is available
   const isLocalStorageAvailable = () => {
@@ -211,7 +211,7 @@ function App() {
       console.error("Force save failed:", err);
       setStorageStatus(`Force save failed: ${err.message}`);
     }
-  };
+  }; forceSave();
 
   return (
     <div className="App">
