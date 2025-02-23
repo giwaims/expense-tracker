@@ -9,9 +9,9 @@ function App() {
   const [expense, setExpense] = useState("");
   const [expenseDescription, setExpenseDescription] = useState("");
   const [expandedId, setExpandedId] = useState(null);
-  // Debug state to verify localStorage
-  const [setStorageStatus] = useState("Checking...");
-
+  // Debug state to verify localStorageconst [storageStatus, setStorageStatus] = useState("Checking...");
+  // eslint-disable-next-line no-unused-vars
+  const [storageStatus, setStorageStatus] = useState("Checking...");
   // Check if localStorage is available
   const isLocalStorageAvailable = () => {
     try {
@@ -202,6 +202,7 @@ function App() {
   };
 
   // Force save transactions (for testing)
+  // eslint-disable-next-line no-unused-vars
   const forceSave = () => {
     try {
       localStorage.setItem("expense-tracker-transactions", JSON.stringify(transactions));
@@ -211,7 +212,7 @@ function App() {
       console.error("Force save failed:", err);
       setStorageStatus(`Force save failed: ${err.message}`);
     }
-  }; forceSave();
+  };
 
   return (
     <div className="App">
