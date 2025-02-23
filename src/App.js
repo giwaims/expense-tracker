@@ -54,7 +54,7 @@ function App() {
       console.error("Error loading data from localStorage:", error);
       setStorageStatus(`Error loading data: ${error.message}`);
     }
-  }, []);
+  }, [setStorageStatus]);
 
   // Save transactions whenever they change
   useEffect(() => {
@@ -71,7 +71,7 @@ function App() {
       console.error("Error saving transactions:", error);
       setStorageStatus(`Error saving data: ${error.message}`);
     }
-  }, [transactions]);
+  }, [transactions, setStorageStatus]);
 
   // Save expanded ID when it changes
   useEffect(() => {
