@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 function App() {
@@ -8,6 +8,7 @@ function App() {
   const [expense, setExpense] = useState("");
   const [expenseDescription, setExpenseDescription] = useState("");
   const [expandedId, setExpandedId] = useState(null);
+  const transactionsListRef = useRef(null);
 
   const isLocalStorageAvailable = () => {
     try {
@@ -40,11 +41,59 @@ function App() {
     localStorage.setItem("expense-tracker-expanded-id", expandedId);
   }, [expandedId]);
 
+  useEffect(() => {
+    const updateTransactionsListHeight = () => {
+      if (!transactionsListRef.current) return;
+
+      const header = document.querySelector(".app-header");
+      const inputSection = document.querySelector(".input-section");
+      const transactionsHeader = document.querySelector(".transactions-header");
+      const app = document.querySelector(".app");
+
+      if (!header || !inputSection || !transactionsHeader || !app) return;
+
+      const headerHeight = header.getBoundingClientRect().height;
+      const inputSectionHeight = inputSection.getBoundingClientRect().height;
+      const transactionsHeaderHeight = transactionsHeader.getBoundingClientRect().height;
+
+      const viewportHeight = window.innerHeight;
+
+      const appPadding = 40;
+      const transactionsSectionPadding = 40;
+      const margins = 60;
+
+      const availableHeight = viewportHeight - (headerHeight + inputSectionHeight + transactionsHeaderHeight + appPadding + transactionsSectionPadding + margins);
+
+      const maxHeight = Math.max(200, availableHeight);
+      transactionsListRef.current.style.maxHeight = `${maxHeight}px`;
+    };
+
+    updateTransactionsListHeight();
+    window.addEventListener("resize", updateTransactionsListHeight);
+
+    return () => window.removeEventListener("resize", updateTransactionsListHeight);
+  }, [transactions, expandedId]);
+
   const toggleDetails = (id) => setExpandedId(expandedId === id ? null : id);
 
+  const parseAmount = (value) => {
+    const trimmedValue = value.trim().toLowerCase().replace("₦", ""); // Ignore ₦ symbol
+    if (trimmedValue.endsWith("k")) {
+      const num = parseFloat(trimmedValue.replace("k", ""));
+      return isNaN(num) ? 0 : num * 1000;
+    } else if (trimmedValue.endsWith("m")) {
+      const num = parseFloat(trimmedValue.replace("m", ""));
+      return isNaN(num) ? 0 : num * 1000000;
+    } else if (trimmedValue.endsWith("b")) {
+      const num = parseFloat(trimmedValue.replace("b", ""));
+      return isNaN(num) ? 0 : num * 1000000000;
+    }
+    return parseFloat(trimmedValue) || 0;
+  };
+
   const addIncome = () => {
-    if (!income || isNaN(parseFloat(income)) || !incomeDescription) return;
-    const amount = parseFloat(income);
+    const amount = parseAmount(income);
+    if (!income || amount <= 0 || !incomeDescription) return;
     const newTransaction = {
       id: Date.now(),
       type: "Income",
@@ -58,8 +107,8 @@ function App() {
   };
 
   const addExpense = () => {
-    if (!expense || isNaN(parseFloat(expense)) || !expenseDescription) return;
-    const amount = parseFloat(expense);
+    const amount = parseAmount(expense);
+    if (!expense || amount <= 0 || !expenseDescription) return;
     const newTransaction = {
       id: Date.now(),
       type: "Expense",
@@ -102,11 +151,16 @@ function App() {
   };
 
   const exportToCSV = () => {
-    const headers = "Type,Amount,Description,Date\n";
+    const headers = ["Type", "Amount", "Description", "Date"].join(",") + "\n";
     const rows = transactions
-      .map((t) => `${t.type},"${formatCurrency(t.amount)}","${t.description.replace(/"/g, '""')}",${formatDate(t.timestamp)}`)
+      .map((t) => [
+        t.type,
+        `"${formatCurrency(t.amount).replace(/"/g, '""')}"`,
+        `"${t.description.replace(/"/g, '""')}"`,
+        `"${formatDate(t.timestamp).replace(/"/g, '""')}"`,
+      ].join(","))
       .join("\n");
-    const csvContent = headers + rows;
+    const csvContent = "\uFEFF" + headers + rows;
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
@@ -140,7 +194,7 @@ function App() {
               onChange={(e) => setIncomeDescription(e.target.value)}
             />
             <input
-              type="number"
+              type="text"
               placeholder="Amount (₦)"
               value={income}
               onChange={(e) => setIncome(e.target.value)}
@@ -159,7 +213,7 @@ function App() {
               onChange={(e) => setExpenseDescription(e.target.value)}
             />
             <input
-              type="number"
+              type="text"
               placeholder="Amount (₦)"
               value={expense}
               onChange={(e) => setExpense(e.target.value)}
@@ -183,7 +237,7 @@ function App() {
           {transactions.length === 0 ? (
             <p className="no-transactions">No transactions yet.</p>
           ) : (
-            <ul className="transactions-list">
+            <ul className="transactions-list" ref={transactionsListRef}>
               {transactions.map((transaction) => (
                 <li
                   key={transaction.id}
@@ -198,16 +252,18 @@ function App() {
                   </div>
                   {expandedId === transaction.id && (
                     <div className="transaction-details">
-                      <p>{formatDate(transaction.timestamp)}</p>
-                      <button
-                        className="delete-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteTransaction(transaction.id);
-                        }}
-                      >
-                        Delete
-                      </button>
+                      <div className="details-row">
+                        <p>{formatDate(transaction.timestamp)}</p>
+                        <button
+                          className="delete-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteTransaction(transaction.id);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   )}
                 </li>
