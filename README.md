@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+Expense Tracker App Documentation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ Overview
+This is a React-based expense tracking application that allows users to add income and expenses, view their transaction history, and export data to CSV format. The app features a sleek, dark-themed UI with responsive design for various screen sizes.
 
-## Available Scripts
+ Key Features
+1. Add income and expenses with descriptions
+2. View current balance (income minus expenses)
+3. See transaction history with expandable details
+4. Delete individual transactions
+5. Export all transactions to CSV
+6. Persistent data storage using localStorage
+7. Responsive design that works on mobile, tablet, and desktop
+8. Support for shorthand currency notation (k, m, b)
+9. Nigerian Naira (₦) as the default currency
 
-In the project directory, you can run:
+ Technical Architecture
 
-### `npm start`
+ Core Technologies
+- React (v19.0.0)
+- React Hooks (useState, useEffect, useRef)
+- CSS3 with responsive design
+- Local storage for data persistence
+- Font Awesome icons via CDN
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+ Component Structure
+The application is built as a single component (`App.js`) with the following logical sections:
+- Header with balance display
+- Input section (split into income and expense forms)
+- Transactions section (list of transactions with expandable details)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+ Data Model
+Each transaction is stored as an object with:
+```javascript
+{
+  id: Number, // Timestamp used as unique identifier
+  type: String, // "Income" or "Expense"
+  amount: Number, // Parsed numeric amount
+  description: String, // User-provided description
+  timestamp: String // ISO string of creation time
+}
+```
 
-### `npm test`
+ Key Functions
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+ State Management
+- Transactions data is persisted in localStorage
+- Input fields maintain their own state until submission
+- A reference to the transactions list allows for dynamic height adjustment
 
-### `npm run build`
+ Transaction Management
+- `addIncome()` and `addExpense()` create new transaction records
+- `deleteTransaction()` removes transactions by ID
+- `toggleDetails()` expands/collapses transaction details
+- `parseAmount()` handles currency notation (e.g., "1k" → 1000)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+ UI/UX Features
+- Dynamic calculation of transaction list height based on available viewport space
+- Formatting functions for currency and dates
+- CSV export functionality with proper encoding
+- Keyboard support (Enter key to submit)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+ CSS Structure
+The CSS uses:
+- Custom properties (variables) for consistent theming
+- Media queries for responsive design (desktop, tablet, mobile)
+- Flexbox and Grid for layout
+- Animations and transitions for interactive elements
+- Font Awesome icons for UI elements
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+ Data Persistence
+The application uses localStorage for persisting:
+- All transactions
+- Which transaction is currently expanded
 
-### `npm run eject`
+The app includes safeguards for environments where localStorage is unavailable.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+ Additional Features
+- Shorthand notation parsing (1k = 1,000, 1m = 1,000,000, etc.)
+- Responsive design with three breakpoints (desktop, tablet, mobile)
+- Different styling for income vs expense items
+- Expandable transaction details with date/time and delete option
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This expense tracker provides a complete solution for tracking personal finances with a focus on usability and visual appeal.
