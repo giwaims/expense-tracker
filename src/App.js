@@ -23,17 +23,25 @@ function App() {
 
   useEffect(() => {
     if (isLocalStorageAvailable()) {
-      const savedTransactions = localStorage.getItem("expense-tracker-transactions");
+      const savedTransactions = localStorage.getItem(
+        "expense-tracker-transactions"
+      );
       if (savedTransactions) setTransactions(JSON.parse(savedTransactions));
 
-      const savedExpandedId = localStorage.getItem("expense-tracker-expanded-id");
-      if (savedExpandedId && savedExpandedId !== "null") setExpandedId(parseInt(savedExpandedId));
+      const savedExpandedId = localStorage.getItem(
+        "expense-tracker-expanded-id"
+      );
+      if (savedExpandedId && savedExpandedId !== "null")
+        setExpandedId(parseInt(savedExpandedId));
     }
   }, []);
 
   useEffect(() => {
     if (!isLocalStorageAvailable()) return;
-    localStorage.setItem("expense-tracker-transactions", JSON.stringify(transactions));
+    localStorage.setItem(
+      "expense-tracker-transactions",
+      JSON.stringify(transactions)
+    );
   }, [transactions]);
 
   useEffect(() => {
@@ -54,7 +62,8 @@ function App() {
 
       const headerHeight = header.getBoundingClientRect().height;
       const inputSectionHeight = inputSection.getBoundingClientRect().height;
-      const transactionsHeaderHeight = transactionsHeader.getBoundingClientRect().height;
+      const transactionsHeaderHeight =
+        transactionsHeader.getBoundingClientRect().height;
 
       const viewportHeight = window.innerHeight;
 
@@ -62,7 +71,14 @@ function App() {
       const transactionsSectionPadding = 40;
       const margins = 60;
 
-      const availableHeight = viewportHeight - (headerHeight + inputSectionHeight + transactionsHeaderHeight + appPadding + transactionsSectionPadding + margins);
+      const availableHeight =
+        viewportHeight -
+        (headerHeight +
+          inputSectionHeight +
+          transactionsHeaderHeight +
+          appPadding +
+          transactionsSectionPadding +
+          margins);
 
       const maxHeight = Math.max(200, availableHeight);
       transactionsListRef.current.style.maxHeight = `${maxHeight}px`;
@@ -71,7 +87,8 @@ function App() {
     updateTransactionsListHeight();
     window.addEventListener("resize", updateTransactionsListHeight);
 
-    return () => window.removeEventListener("resize", updateTransactionsListHeight);
+    return () =>
+      window.removeEventListener("resize", updateTransactionsListHeight);
   }, [transactions, expandedId]);
 
   const toggleDetails = (id) => setExpandedId(expandedId === id ? null : id);
@@ -153,19 +170,24 @@ function App() {
   const exportToCSV = () => {
     const headers = ["Type", "Amount", "Description", "Date"].join(",") + "\n";
     const rows = transactions
-      .map((t) => [
-        t.type,
-        `"${formatCurrency(t.amount).replace(/"/g, '""')}"`,
-        `"${t.description.replace(/"/g, '""')}"`,
-        `"${formatDate(t.timestamp).replace(/"/g, '""')}"`,
-      ].join(","))
+      .map((t) =>
+        [
+          t.type,
+          `"${formatCurrency(t.amount).replace(/"/g, '""')}"`,
+          `"${t.description.replace(/"/g, '""')}"`,
+          `"${formatDate(t.timestamp).replace(/"/g, '""')}"`,
+        ].join(",")
+      )
       .join("\n");
     const csvContent = "\uFEFF" + headers + rows;
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `transactions_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute(
+      "download",
+      `transactions_${new Date().toISOString().slice(0, 10)}.csv`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -177,7 +199,11 @@ function App() {
         <h1>Expense Tracker</h1>
         <div className="balance-card">
           <span className="balance-label">Balance</span>
-          <span className={`balance-amount ${calculateBalance() >= 0 ? "positive" : "negative"}`}>
+          <span
+            className={`balance-amount ${
+              calculateBalance() >= 0 ? "positive" : "negative"
+            }`}
+          >
             {formatCurrency(calculateBalance())}
           </span>
         </div>
@@ -241,14 +267,18 @@ function App() {
               {transactions.map((transaction) => (
                 <li
                   key={transaction.id}
-                  className={`transaction-item ${transaction.type.toLowerCase()} ${expandedId === transaction.id ? "expanded" : ""}`}
+                  className={`transaction-item ${transaction.type.toLowerCase()} ${
+                    expandedId === transaction.id ? "expanded" : ""
+                  }`}
                   onClick={() => toggleDetails(transaction.id)}
                 >
                   <div className="transaction-summary">
                     <span className="transaction-type">
                       {transaction.type}: {formatCurrency(transaction.amount)}
                     </span>
-                    <span className="transaction-desc">{transaction.description}</span>
+                    <span className="transaction-desc">
+                      {transaction.description}
+                    </span>
                   </div>
                   {expandedId === transaction.id && (
                     <div className="transaction-details">
